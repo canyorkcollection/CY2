@@ -73,7 +73,7 @@ export default function LandingIntro({ onComplete }) {
           style={{
             fontFamily: "'Sora', sans-serif",
             fontSize: "2.5rem", fontWeight: 600,
-            letterSpacing: "0.3em", color: "#fff",
+            letterSpacing: "0.3em", color: "#0047AB",
             textTransform: "uppercase", margin: 0,
             whiteSpace: "nowrap" // Evita que el logo se rompa al encogerse
           }}
@@ -95,7 +95,7 @@ export default function LandingIntro({ onComplete }) {
           style={{
             fontFamily: "'EB Garamond', serif",
             fontSize: "1.1rem", 
-            color: "#fff", // BLANCO como pediste
+            color: "#0047AB", // BLANCO como pediste
             textAlign: "center",
             lineHeight: 1.5, fontStyle: "italic", margin: 0,
             maxWidth: "22rem", // Ancho de línea ajustado al tamaño del logo

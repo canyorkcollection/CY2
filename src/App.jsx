@@ -29,8 +29,14 @@ function AnimatedRoutes() {
   }, [location]);
 
   if (session === undefined) return null;
-  if (session === null)      return <Login />;
-
+if (session === null) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#fff" }}>
+      <Login />
+      <Footer />
+    </div>
+  );
+}
   return (
     <div ref={topRef} style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#fff", color: "#000" }}>
       <Header />

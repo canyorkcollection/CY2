@@ -1,136 +1,112 @@
 import React, { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import Footer from "./Footer";
 
 export default function Login() {
-  const [email,   setEmail]   = useState("");
-  const [sent,    setSent]    = useState(false);
-  const [error,   setError]   = useState(null);
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
 
-  async function handleSubmit() {
+  async function handleLogin(e) {
+    e.preventDefault();
     if (!email) return;
-    setLoading(true);
-    setError(null);
 
-    const { error } = await supabase.auth.signInWithOtp({ email });
+    setLoading(true);
+    setMessage(null);
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
+
+    setLoading(false);
 
     if (error) {
-      setError(error.message);
+      // Si el error es porque los registros están bloqueados, significa que no está invitado
+      if (error.message.includes("Signups not allowed") || error.status === 422) {
+        setMessage({ type: "err", text: "Este email no está invitado. Debes recibir un enlace de acceso exclusivo." });
+      } else {
+        setMessage({ type: "err", text: "Ocurrió un error. Inténtalo de nuevo." });
+      }
     } else {
-      setSent(true);
+      setMessage({ type: "ok", text: "Enlace de acceso enviado. Revisa tu bandeja de entrada." });
+      setEmail("");
     }
-    setLoading(false);
-  }
-
-  function handleKeyDown(e) {
-    if (e.key === "Enter") handleSubmit();
   }
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "#fff",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "2rem",
+    <div style={{ 
+      display: "flex", 
+      flexDirection: "column", 
+      alignItems: "center", 
+      justifyContent: "center", 
+      minHeight: "80vh", 
+      padding: "2rem" 
     }}>
+      <div style={{ width: "100%", maxWidth: "400px" }}>
+        <h1 className="font-garamond" style={{ fontSize: "2rem", color: "#0047AB", marginBottom: "0.5rem", textAlign: "center" }}>
+          Acceso Privado
+        </h1>
+        <p className="font-sora" style={{ fontSize: "0.8rem", color: "#999", textAlign: "center", marginBottom: "3rem" }}>
+          Una selección restringida de arte contemporáneo.
+        </p>
 
-      {/* Logo */}
-      <span className="font-sora" style={{
-        fontSize: "3.2rem",
-        fontWeight: 700,
-        letterSpacing: "0.18em",
-        color: "#0047AB",
-        marginBottom: "1.2rem",
-      }}>
-        CAN YORK
-      </span>
-
-      {/* Subtítulo */}
-      <p className="font-garamond" style={{
-        fontSize: "1.3rem",
-        color: "#444",
-        marginBottom: "3.5rem",
-        fontStyle: "italic",
-      }}>
-        Acceso exclusivo a la colección
-      </p>
-
-      {/* Formulario */}
-      <div style={{ width: "100%", maxWidth: "380px" }}>
-
-        {!sent ? (
-          <>
-            {/* Input email minimalista */}
+        <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div>
             <input
               type="email"
-              placeholder="tu@email.com"
               value={email}
-              onChange={e => setEmail(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="font-garamond"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Tu email"
+              required
+              disabled={loading}
+              className="font-sora"
               style={{
                 width: "100%",
                 border: "none",
                 borderBottom: "1.5px solid #0047AB",
                 outline: "none",
-                fontSize: "1.4rem",
-                padding: "0.6rem 0",
-                marginBottom: "2.5rem",
+                fontSize: "1.1rem",
+                padding: "0.75rem 0",
                 background: "transparent",
                 color: "#111",
-                letterSpacing: "0.02em",
+                fontFamily: "'Sora', sans-serif",
+                textAlign: "center",
               }}
             />
+          </div>
 
-            <button
-              className="btn-cobalt font-sora"
-              onClick={handleSubmit}
-              disabled={loading}
-              style={{
-                width: "100%",
-                opacity: loading ? 0.6 : 1,
-                transition: "opacity 0.2s",
-              }}
-            >
-              {loading ? "Enviando…" : "Solicitar acceso"}
-            </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-cobalt font-sora"
+            style={{ width: "100%", opacity: loading ? 0.6 : 1 }}
+          >
+            {loading ? "Enviando..." : "Solicitar acceso"}
+          </button>
+        </form>
 
-            {/* Error */}
-            {error && (
-              <p className="font-garamond" style={{
-                marginTop: "1.2rem",
-                fontSize: "1.1rem",
-                color: "#B22222",
-                textAlign: "center",
-              }}>
-                {error}
-              </p>
-            )}
-          </>
-        ) : (
-          /* Estado de éxito */
-          <p className="font-garamond" style={{
-            fontSize: "1.3rem",
-            color: "#0047AB",
-            textAlign: "center",
-            lineHeight: 1.7,
-          }}>
-            Revisa tu bandeja de entrada.
+        {message && (
+          <p 
+            className="font-sora" 
+            style={{ 
+              marginTop: "1.5rem", 
+              fontSize: "0.85rem", 
+              textAlign: "center",
+              lineHeight: 1.6,
+              color: message.type === "ok" ? "#0047AB" : "#B22222" 
+            }}
+          >
+            {message.text}
           </p>
         )}
-      </div>
 
-      {/* Línea decorativa inferior */}
-      <div style={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        borderTop: "1.5px solid #0047AB",
-      }} />
+        <p className="font-sora" style={{ marginTop: "4rem", fontSize: "0.75rem", color: "#bbb", textAlign: "center", lineHeight: 1.6 }}>
+          ¿Ya fuiste invitado? Introduce tu email para recibir el enlace de acceso mágico.
+        </p>
+      </div>
     </div>
   );
 }

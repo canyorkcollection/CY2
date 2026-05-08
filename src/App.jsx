@@ -68,8 +68,12 @@ if (session === null) {
                 <Route path="/artists"     element={<Artists />} />
                 <Route path="/artists/:id" element={<ArtistDetail />} />
                 <Route path="/contact"     element={<Contact />} />
-                <Route path="/admin"       element={<Admin />} />
-              </Routes>
+{/* Protección de ruta: Solo estos dos emails ven el Admin */}
+{session?.user?.email && (
+  ["canyorkcollection@gmail.com", "sourdiesel@mac.com"].includes(session.user.email) 
+    ? <Route path="/admin" element={<Admin />} />
+    : null
+)}              </Routes>
             </AnimatePresence>
           </main>
         )}

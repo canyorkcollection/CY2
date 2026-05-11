@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Header        from "./components/Header";
@@ -19,20 +19,27 @@ import "./styles.css";
 const ADMIN_EMAILS = ["canyorkcollection@gmail.com"];
 
 function AnimatedRoutes() {
-  const location    = useLocation();
-  const { session } = useAuth();
-  const topRef      = useRef(null);
+  const location  = useLocation();
+  const navigate  = useNavigate();
+  const { session, isAdmin } = useAuth();
+  const topRef    = useRef(null);
 
   const introAlreadySeen = sessionStorage.getItem("can-york-intro-seen") === "true";
   const [showIntro, setShowIntro] = useState(
     !introAlreadySeen && location.pathname === "/"
   );
 
+  // Redirect admin to /admin as soon as session resolves
+  useEffect(() => {
+    if (session && isAdmin && location.pathname === "/") {
+      navigate("/admin", { replace: true });
+    }
+  }, [session, isAdmin, location.pathname]);
+
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [location]);
 
-  // Still resolving session
   if (session === undefined) return null;
 
   // Public routes — always accessible
@@ -54,9 +61,6 @@ function AnimatedRoutes() {
       </Routes>
     );
   }
-
-  // Logged in but not admin → block /admin
-  const isAdmin = ADMIN_EMAILS.includes(session.user.email);
 
   return (
     <div ref={topRef} style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#fff", color: "#000" }}>

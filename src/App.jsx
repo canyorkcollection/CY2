@@ -1,18 +1,22 @@
 import React, { useRef, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import Header       from "./components/Header";
-import Gallery      from "./components/Gallery";
+import Header        from "./components/Header";
+import Gallery       from "./components/Gallery";
 import ArtworkDetail from "./components/ArtworkDetail";
-import Artists      from "./components/Artists";
-import ArtistDetail from "./components/ArtistDetail";
-import Contact      from "./components/Contact";
-import Admin        from "./components/Admin";
-import Login        from "./components/Login";
-import LandingIntro from "./components/LandingIntro";
-import Footer       from "./components/Footer";
+import Artists       from "./components/Artists";
+import ArtistDetail  from "./components/ArtistDetail";
+import Contact       from "./components/Contact";
+import Admin         from "./components/Admin";
+import Footer        from "./components/Footer";
+import LandingIntro  from "./components/LandingIntro";
+import GuestLogin    from "./pages/GuestLogin";
+import AdminLogin    from "./pages/AdminLogin";
+import AuthCallback  from "./pages/AuthCallback";
 import "./styles.css";
+
+const ADMIN_EMAILS = ["canyorkcollection@gmail.com"];
 
 function AnimatedRoutes() {
   const location    = useLocation();
@@ -28,24 +32,39 @@ function AnimatedRoutes() {
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [location]);
 
+  // Still resolving session
   if (session === undefined) return null;
-if (session === null) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#fff" }}>
-      <Login />
-      <Footer />
-    </div>
-  );
-}
+
+  // Public routes — always accessible
+  const publicPaths = ["/auth/callback", "/admin/login"];
+  if (publicPaths.includes(location.pathname)) {
+    return (
+      <Routes location={location} key={location.pathname}>
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/admin/login"   element={<AdminLogin />} />
+      </Routes>
+    );
+  }
+
+  // Not logged in → guest login
+  if (!session) {
+    return (
+      <Routes location={location} key={location.pathname}>
+        <Route path="*" element={<GuestLogin />} />
+      </Routes>
+    );
+  }
+
+  // Logged in but not admin → block /admin
+  const isAdmin = ADMIN_EMAILS.includes(session.user.email);
+
   return (
     <div ref={topRef} style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#fff", color: "#000" }}>
       <Header />
 
       <div style={{ flex: 1 }}>
-        {/* Intro only on "/" and only once per session */}
         {showIntro && location.pathname === "/" ? (
           <>
-            {/* Gallery rendered underneath, hidden until intro completes */}
             <motion.div
               initial={{ y: "100vh" }}
               animate={{ y: showIntro ? "100vh" : "0vh" }}
@@ -56,7 +75,6 @@ if (session === null) {
                 <Gallery />
               </div>
             </motion.div>
-
             <LandingIntro onComplete={() => setShowIntro(false)} />
           </>
         ) : (
@@ -68,12 +86,12 @@ if (session === null) {
                 <Route path="/artists"     element={<Artists />} />
                 <Route path="/artists/:id" element={<ArtistDetail />} />
                 <Route path="/contact"     element={<Contact />} />
-{/* Protección de ruta: Solo estos dos emails ven el Admin */}
-{session?.user?.email && (
-  ["canyorkcollection@gmail.com", "sourdiesel@mac.com"].includes(session.user.email) 
-    ? <Route path="/admin" element={<Admin />} />
-    : null
-)}              </Routes>
+                <Route
+                  path="/admin"
+                  element={isAdmin ? <Admin /> : <Navigate to="/" replace />}
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
             </AnimatePresence>
           </main>
         )}

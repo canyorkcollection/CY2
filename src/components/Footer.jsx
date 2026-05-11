@@ -15,7 +15,7 @@ export default function Footer() {
     }}>
       <span>© 2025 Can York &nbsp;·&nbsp;&nbsp;</span>
       <Link
-        to="/admin"
+        to="/admin/login"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{

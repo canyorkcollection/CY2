@@ -32,18 +32,23 @@ export default function AdminLogin() {
   }, [isRecovery]);
 
   async function handleLogin() {
-    if (!email || !password) return;
-    setLoading(true);
-    setError(null);
+  if (!email || !password) return;
+  setLoading(true);
+  setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  setLoading(false);
 
-    if (error) {
-      setError("Credenciales incorrectas.");
-    }
-    // onAuthStateChange in AuthContext picks up the session → App.jsx redirects
+  if (error) {
+    setError("Credenciales incorrectas.");
+    return;
   }
+
+  // Session exists — let App.jsx decide where to send based on isAdmin
+  if (data.session) {
+    navigate("/", { replace: true });
+  }
+}
 
   async function handleReset() {
     if (!email) { setError("Introduce tu email primero."); return; }

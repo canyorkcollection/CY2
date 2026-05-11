@@ -6,16 +6,25 @@ export default function AuthCallback() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session) {
+    // Parse hash tokens and establish session manually
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
         navigate("/", { replace: true });
+        return;
       }
-      if (event === "PASSWORD_RECOVERY") {
-        navigate("/admin/login?recovery=true", { replace: true });
-      }
-    });
 
-    return () => subscription.unsubscribe();
+      // If no session yet, wait for onAuthStateChange to pick up the hash
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_IN" && session) {
+          navigate("/", { replace: true });
+        }
+        if (event === "PASSWORD_RECOVERY") {
+          navigate("/admin/login?recovery=true", { replace: true });
+        }
+      });
+
+      return () => subscription.unsubscribe();
+    });
   }, [navigate]);
 
   return (

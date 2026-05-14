@@ -12,7 +12,7 @@ const lbl = {
   display: "block", marginBottom: "0.25rem",
 };
 
-const DEFAULT = {
+const DEFAULT_CONTACT = {
   headline:    "Let's talk about the collection.",
   location:    "Ibiza, Spain",
   description: "Can York is a private collection. Works are not publicly exhibited. Access is by invitation, and every conversation is treated with the same discretion as the collection itself.",
@@ -20,21 +20,27 @@ const DEFAULT = {
   hero_images: [],
 };
 
+const DEFAULT_GALLERY = {
+  headline:    "Works in the collection",
+  description: "A private selection of contemporary art assembled over two decades at the margins of the visible.",
+};
+
 export default function AdminContact() {
-  const [data,    setData]    = useState(DEFAULT);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
+  const [data,        setData]        = useState(DEFAULT_CONTACT);
+  const [galleryData, setGalleryData] = useState(DEFAULT_GALLERY);
+  const [loading,     setLoading]     = useState(false);
+  const [message,     setMessage]     = useState(null);
   const fileRef = useRef(null);
 
   useEffect(() => { fetchContent(); }, []);
 
   async function fetchContent() {
-    const { data: row } = await supabase
-      .from("site_content")
-      .select("data")
-      .eq("key", "contact")
-      .single();
-    if (row?.data) setData({ ...DEFAULT, ...row.data });
+    const [{ data: contactRow }, { data: galleryRow }] = await Promise.all([
+      supabase.from("site_content").select("data").eq("key", "contact").single(),
+      supabase.from("site_content").select("data").eq("key", "gallery").single(),
+    ]);
+    if (contactRow?.data) setData({ ...DEFAULT_CONTACT, ...contactRow.data });
+    if (galleryRow?.data) setGalleryData({ ...DEFAULT_GALLERY, ...galleryRow.data });
   }
 
   function setField(key, value) {
@@ -50,6 +56,15 @@ export default function AdminContact() {
   async function handleSaveText() {
     setLoading(true);
     const { error } = await saveData(data);
+    setLoading(false);
+    flash(error ? "Error saving." : "Saved.");
+  }
+
+  async function handleSaveGallery() {
+    setLoading(true);
+    const { error } = await supabase
+      .from("site_content")
+      .upsert({ key: "gallery", data: galleryData }, { onConflict: "key" });
     setLoading(false);
     flash(error ? "Error saving." : "Saved.");
   }
@@ -88,7 +103,38 @@ export default function AdminContact() {
 
   return (
     <div>
-      <h2 className="font-sora" style={{ fontSize: "1.4rem", fontWeight: 600, marginBottom: "2.5rem" }}>
+
+      {/* Gallery intro */}
+      <h2 className="font-sora" style={{ fontSize: "1.4rem", fontWeight: 600, marginBottom: "2rem" }}>
+        Gallery intro
+      </h2>
+      <div style={{ maxWidth: "560px", marginBottom: "4rem" }}>
+        <label style={lbl}>Headline</label>
+        <input
+          style={inp}
+          value={galleryData.headline}
+          onChange={e => setGalleryData(p => ({ ...p, headline: e.target.value }))}
+        />
+        <label style={lbl}>Description</label>
+        <textarea
+          rows={3}
+          style={inp}
+          value={galleryData.description}
+          onChange={e => setGalleryData(p => ({ ...p, description: e.target.value }))}
+        />
+        <button
+          className="btn-cobalt font-sora"
+          onClick={handleSaveGallery}
+          disabled={loading}
+          style={{ opacity: loading ? 0.6 : 1 }}
+        >
+          Save gallery text
+        </button>
+      </div>
+
+      <hr className="cobalt-line" style={{ marginBottom: "3rem" }} />
+
+      <h2 className="font-sora" style={{ fontSize: "1.4rem", fontWeight: 600, marginBottom: "2rem" }}>
         Contact page
       </h2>
 

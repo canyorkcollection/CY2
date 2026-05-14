@@ -58,22 +58,30 @@ const CARD_H = 500; // px — same for all artworks
 const MIN_W  = 180;
 const MAX_W  = 380;
 
+const DEFAULT_INTRO = {
+  headline:    "Works in the collection",
+  description: "A private selection of contemporary art assembled over two decades at the margins of the visible.",
+};
+
 export default function Gallery() {
   const navigate = useNavigate();
   const [artworks, setArtworks] = useState([]);
+  const [intro,    setIntro]    = useState(DEFAULT_INTRO);
   const [loading,  setLoading]  = useState(true);
   const [error,    setError]    = useState(null);
 
   useEffect(() => {
-    async function fetchArtworks() {
-      const { data, error } = await supabase
-        .from("artworks")
-        .select("*, artists(name)");
-      if (error) setError(error.message);
-      else setArtworks(data);
+    async function fetchAll() {
+      const [{ data: artData, error: artErr }, { data: introRow }] = await Promise.all([
+        supabase.from("artworks").select("*, artists(name)"),
+        supabase.from("site_content").select("data").eq("key", "gallery").single(),
+      ]);
+      if (artErr) setError(artErr.message);
+      else setArtworks(artData);
+      if (introRow?.data) setIntro({ ...DEFAULT_INTRO, ...introRow.data });
       setLoading(false);
     }
-    fetchArtworks();
+    fetchAll();
   }, []);
 
   if (loading) {
@@ -96,10 +104,10 @@ export default function Gallery() {
     <PageTransition>
       <div style={{ marginBottom: "3.5rem" }}>
         <h1 className="font-sora" style={{ fontSize: "2.4rem", fontWeight: 700, lineHeight: 1.15, marginBottom: "1.2rem" }}>
-          Works in the collection
+          {intro.headline}
         </h1>
         <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#333", maxWidth: "520px", lineHeight: 1.7 }}>
-          A private selection of contemporary art assembled over two decades at the margins of the visible.
+          {intro.description}
         </p>
       </div>
 

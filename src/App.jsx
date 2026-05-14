@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Header        from "./components/Header";
@@ -16,11 +16,8 @@ import AdminLogin    from "./pages/AdminLogin";
 import AuthCallback  from "./pages/AuthCallback";
 import "./styles.css";
 
-const ADMIN_EMAILS = ["canyorkcollection@gmail.com"];
-
 function AnimatedRoutes() {
   const location  = useLocation();
-  const navigate  = useNavigate();
   const { session, isAdmin } = useAuth();
   const topRef    = useRef(null);
 
@@ -28,13 +25,6 @@ function AnimatedRoutes() {
   const [showIntro, setShowIntro] = useState(
     !introAlreadySeen && location.pathname === "/"
   );
-
-  // Redirect admin to /admin as soon as session resolves
-  useEffect(() => {
-    if (session && isAdmin && location.pathname === "/") {
-      navigate("/admin", { replace: true });
-    }
-  }, [session, isAdmin, location.pathname]);
 
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "smooth" });

@@ -8,9 +8,16 @@ const NAV_LINKS = [
   { label: "Contacto",  path: "/contact" },
 ];
 
+const ADMIN_LINKS = [
+  { label: "Colección", path: "/" },
+  { label: "Artistas",  path: "/artists" },
+  { label: "Contacto",  path: "/contact" },
+  { label: "Admin",     path: "/admin" },
+];
+
 export default function Header() {
   const navigate        = useNavigate();
-  const { signOut }     = useAuth();
+  const { signOut, isAdmin } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef         = useRef(null);
 
@@ -49,7 +56,7 @@ export default function Header() {
 
       {/* Desktop nav */}
       <nav className="header-nav-desktop" style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
-        {NAV_LINKS.map(l => (
+        {(isAdmin ? ADMIN_LINKS : NAV_LINKS).map(l => (
           <button key={l.path} style={navBtn} onClick={() => go(l.path)}>{l.label}</button>
         ))}
         <button className="btn-cobalt font-sora" onClick={signOut} style={{ letterSpacing: "0.12em" }}>
@@ -96,7 +103,7 @@ export default function Header() {
             zIndex: 2000, gap: "0",
           }}
         >
-          {NAV_LINKS.map(l => (
+          {(isAdmin ? ADMIN_LINKS : NAV_LINKS).map(l => (
             <button
               key={l.path}
               onClick={() => go(l.path)}

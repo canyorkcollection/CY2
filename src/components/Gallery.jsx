@@ -15,8 +15,8 @@ function aspectRatio(dim) {
 }
 
 const CARD_H = 500; // px — same for all artworks
-const MIN_W  = 200;
-const MAX_W  = 700;
+const MIN_W  = 180;
+const MAX_W  = 380;
 
 export default function Gallery() {
   const navigate = useNavigate();

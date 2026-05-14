@@ -13,8 +13,8 @@ body { background: #fff; }
 
 .slider-track {
   display: flex;
-  align-items: flex-end;
-  gap: 3.5rem;
+  align-items: center;
+  gap: 6rem;
   overflow-x: auto;
   padding-bottom: 2.5rem;
   scroll-snap-type: x mandatory;

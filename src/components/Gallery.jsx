@@ -3,26 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import PageTransition from "./PageTransition";
 
-// Parses "38 1/2 x 57 1/2 in", "121.9 x 121.9", "36 x 30 x 2 in", etc.
-// Returns { w, h } in cm, or null if invalid.
-function parseDimensions(dim) {
+// Returns aspect ratio w/h from dimension string, or null if invalid.
+function aspectRatio(dim) {
   if (!dim || !dim.trim()) return null;
-  // Resolve mixed fractions: "38 1/2" → "38.5"
   const str = dim.replace(/(\d+)\s+(\d+)\/(\d+)/g, (_, whole, num, den) =>
     String(parseFloat(whole) + parseFloat(num) / parseFloat(den))
   );
   const nums = str.match(/[\d.]+/g)?.map(Number);
   if (!nums || nums.length < 2 || nums[0] === 0 || nums[1] === 0) return null;
-  const inch = /in/i.test(dim);
-  return {
-    w: inch ? nums[0] * 2.54 : nums[0],
-    h: inch ? nums[1] * 2.54 : nums[1],
-  };
+  return nums[0] / nums[1];
 }
 
-const MAX_H = 520; // px — tallest artwork
-const MIN_H = 160; // px — smallest artwork
-const FALLBACK_H = 320; // px — works with no dimension data
+const CARD_H = 500; // px — same for all artworks
+const MIN_W  = 200;
+const MAX_W  = 700;
 
 export default function Gallery() {
   const navigate = useNavigate();
@@ -58,11 +52,6 @@ export default function Gallery() {
     );
   }
 
-  // Find tallest real height (cm) to scale against
-  const dims = artworks.map(a => parseDimensions(a.dimensions));
-  const realHeights = dims.map(d => d?.h).filter(Boolean);
-  const maxRealH = realHeights.length ? Math.max(...realHeights) : 200;
-
   return (
     <PageTransition>
       <div style={{ marginBottom: "3.5rem" }}>
@@ -75,15 +64,12 @@ export default function Gallery() {
       </div>
 
       <div className="slider-track">
-        {artworks.map((art, i) => {
+        {artworks.map(art => {
           const imgSrc = art.images?.[0] ?? art.image_url;
-          const dim    = dims[i];
-          const artH   = dim
-            ? Math.round(Math.max(MIN_H, (dim.h / maxRealH) * MAX_H))
-            : FALLBACK_H;
-          const artW   = dim
-            ? Math.round(artH * (dim.w / dim.h))
-            : Math.round(FALLBACK_H * 0.85);
+          const ratio  = aspectRatio(art.dimensions);
+          const artW   = ratio
+            ? Math.round(Math.min(MAX_W, Math.max(MIN_W, CARD_H * ratio)))
+            : Math.round(CARD_H * 0.85);
 
           return (
             <div
@@ -94,7 +80,7 @@ export default function Gallery() {
             >
               <div
                 className="card-img-wrap"
-                style={{ height: `${artH}px` }}
+                style={{ height: `${CARD_H}px` }}
               >
                 {imgSrc && (
                   <img

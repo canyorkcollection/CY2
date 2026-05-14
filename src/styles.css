@@ -25,7 +25,7 @@ body { background: #fff; }
 .slider-track::-webkit-scrollbar-thumb { background: #0047AB; border-radius: 2px; }
 
 .art-card { flex: 0 0 320px; scroll-snap-align: start; cursor: pointer; }
-.art-card:hover .card-img-wrap { border-color: #0047AB; transform: translateY(-4px); }
+.art-card:hover .card-img-wrap { transform: translateY(-4px); }
 
 .card-img-wrap {
   width: 100%;
@@ -95,7 +95,6 @@ body { background: #fff; }
 
 /* Tarjetas de artista */
 .artist-card:hover .artist-card-img {
-  border-color: #0047AB !important;
   transform: translateY(-4px);
 }
 

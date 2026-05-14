@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import PageTransition from "./PageTransition";
@@ -12,6 +12,46 @@ function aspectRatio(dim) {
   const nums = str.match(/[\d.]+/g)?.map(Number);
   if (!nums || nums.length < 2 || nums[0] === 0 || nums[1] === 0) return null;
   return nums[0] / nums[1];
+}
+
+function GalleryEnd({ height }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold: 0.4 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} style={{
+      flexShrink: 0, width: "260px", height: `${height}px`,
+      display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "flex-end",
+      paddingBottom: "4rem",
+    }}>
+      <div style={{
+        width: "44px", height: "44px", borderRadius: "50%",
+        background: "#0047AB",
+        transform: visible ? "translateY(0)" : "translateY(50px)",
+        opacity: visible ? 1 : 0,
+        transition: "transform 1.1s cubic-bezier(0.16,1,0.3,1), opacity 1.1s ease",
+      }} />
+      <p className="font-sora" style={{
+        fontSize: "0.78rem", color: "#0047AB",
+        letterSpacing: "0.16em", textTransform: "uppercase",
+        marginTop: "1.6rem", textAlign: "center",
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.9s ease 0.7s",
+      }}>
+        Thank you for visiting.
+      </p>
+    </div>
+  );
 }
 
 const CARD_H = 500; // px — same for all artworks
@@ -101,6 +141,7 @@ export default function Gallery() {
             </div>
           );
         })}
+        <GalleryEnd height={CARD_H} />
       </div>
 
       <hr className="cobalt-line" style={{ marginTop: "3.5rem" }} />

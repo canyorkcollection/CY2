@@ -40,11 +40,24 @@ export default function Header() {
     }}>
       {/* Logo */}
       <span
-        className="font-sora"
         onClick={() => go("/")}
-        style={{ fontSize: "2.8rem", fontWeight: 700, letterSpacing: "0.18em", color: "#0047AB", cursor: "pointer" }}
+        style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}
       >
-        CAN YORK
+        <span className="font-sora" style={{ fontSize: "2.8rem", fontWeight: 700, letterSpacing: "0.18em", color: "#0047AB" }}>
+          CAN Y
+        </span>
+        <span className="font-sora" style={{
+          fontSize: "2.8rem", fontWeight: 700, color: "#0047AB",
+          background: "#FFDCA8", borderRadius: "50%",
+          width: "1.05em", height: "1.05em",
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+          letterSpacing: 0, marginRight: "0.18em", flexShrink: 0,
+        }}>
+          O
+        </span>
+        <span className="font-sora" style={{ fontSize: "2.8rem", fontWeight: 700, letterSpacing: "0.18em", color: "#0047AB" }}>
+          RK
+        </span>
       </span>
 
       {/* Desktop nav */}

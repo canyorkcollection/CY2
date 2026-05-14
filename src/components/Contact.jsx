@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PageTransition from "./PageTransition";
 
-const FORMSPREE_ID = "https://formspree.io/f/mlgzllpj"; // 🔴 Reemplaza con tu ID real de Formspree
+const FORMSPREE_URL = "https://formspree.io/f/mlgzllpj";
 
 export default function Contact() {
   const [fields,  setFields]  = useState({ name: "", email: "", message: "" });
@@ -22,7 +22,7 @@ export default function Contact() {
     setError(null);
 
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch(FORMSPREE_URL, {
         method:  "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body:    JSON.stringify(fields),

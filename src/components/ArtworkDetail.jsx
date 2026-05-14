@@ -166,7 +166,10 @@ export default function ArtworkDetail() {
                   <span className="font-sora" style={{ fontSize: "0.8rem", letterSpacing: "0.12em", color: "#0047AB", textTransform: "uppercase", flexShrink: 0 }}>
                     {label}
                   </span>
-                  <span className="font-garamond" style={{ fontSize: "1.1rem", color: "#111", textAlign: "right" }}>{value}</span>
+                  {label === "Artista" && art.artist_id
+                    ? <Link to={`/artists/${art.artist_id}`} className="font-garamond artist-name-link" style={{ fontSize: "1.1rem", textAlign: "right" }}>{value}</Link>
+                    : <span className="font-garamond" style={{ fontSize: "1.1rem", color: "#111", textAlign: "right" }}>{value}</span>
+                  }
                 </div>
                 <hr className="cobalt-line" style={{ margin: 0 }} />
               </div>

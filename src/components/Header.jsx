@@ -46,15 +46,12 @@ export default function Header() {
         <span className="font-sora" style={{ fontSize: "2.8rem", fontWeight: 700, letterSpacing: "0.18em", color: "#0047AB" }}>
           CAN Y
         </span>
-        <span className="font-sora" style={{
-          fontSize: "2.8rem", fontWeight: 700, color: "#0047AB",
+        <span style={{
+          display: "inline-block",
           background: "#FFDCA8", borderRadius: "50%",
-          width: "1.05em", height: "1.05em",
-          display: "inline-flex", alignItems: "center", justifyContent: "center",
-          letterSpacing: 0, marginRight: "0.18em", flexShrink: 0,
-        }}>
-          O
-        </span>
+          width: "0.72em", height: "0.72em",
+          marginRight: "0.18em", flexShrink: 0,
+        }} />
         <span className="font-sora" style={{ fontSize: "2.8rem", fontWeight: 700, letterSpacing: "0.18em", color: "#0047AB" }}>
           RK
         </span>

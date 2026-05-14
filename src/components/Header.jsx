@@ -49,7 +49,7 @@ export default function Header() {
         <span style={{
           display: "inline-block",
           background: "#FFDCA8", borderRadius: "50%",
-          width: "0.72em", height: "0.72em",
+          width: "2.16em", height: "2.16em",
           marginRight: "0.18em", flexShrink: 0,
         }} />
         <span className="font-sora" style={{ fontSize: "2.8rem", fontWeight: 700, letterSpacing: "0.18em", color: "#0047AB" }}>

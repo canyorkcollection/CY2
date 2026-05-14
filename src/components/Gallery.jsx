@@ -90,7 +90,7 @@ export default function Gallery() {
                   />
                 )}
               </div>
-              <div style={{ paddingTop: "1rem" }}>
+              <div style={{ paddingTop: "1rem", textAlign: "center" }}>
                 <h2 className="font-sora" style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.2rem" }}>
                   {art.title}
                 </h2>

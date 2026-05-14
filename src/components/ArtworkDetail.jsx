@@ -138,9 +138,9 @@ export default function ArtworkDetail() {
             className="artwork-main-image"
             onClick={() => activeImg && setZoomSrc(activeImg)}
             style={{
-              width: "100%", height: "70vh", background: "#f5f5f5",
+              width: "100%", height: "70vh",
               display: "flex", alignItems: "center", justifyContent: "center",
-              border: "2px solid #0047AB", overflow: "hidden", cursor: "zoom-in",
+              overflow: "hidden", cursor: "zoom-in",
             }}
           >
             {activeImg && (
@@ -160,7 +160,7 @@ export default function ArtworkDetail() {
                 onClick={() => setActiveImg(images[0])}
                 style={{
                   width: "80px", height: "80px", overflow: "hidden", cursor: "pointer", flexShrink: 0,
-                  border: activeImg === images[0] ? "2px solid #0047AB" : "1.5px solid #e0e0e0",
+                  border: "1.5px solid #e0e0e0",
                   borderRadius: "4px", transition: "all 0.2s ease",
                 }}
               >
@@ -174,7 +174,7 @@ export default function ArtworkDetail() {
                   onClick={() => setActiveImg(url)}
                   style={{
                     width: "80px", height: "80px", overflow: "hidden", cursor: "pointer", flexShrink: 0,
-                    border: activeImg === url ? "2px solid #0047AB" : "1.5px solid #e0e0e0",
+                    border: "1.5px solid #e0e0e0",
                     borderRadius: "4px", transition: "all 0.2s ease",
                   }}
                 >

@@ -130,9 +130,9 @@ export default function ArtworkDetail() {
 
       <button className="btn-back font-sora" onClick={() => navigate("/")}>← Volver al listado</button>
 
-      <div className="artwork-detail-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "start" }}>
+      <div className="artwork-detail-grid" style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "4rem", alignItems: "start" }}>
 
-        {/* Left: image + close-ups */}
+        {/* Left: image */}
         <div>
           <div
             className="artwork-main-image"
@@ -151,54 +151,22 @@ export default function ArtworkDetail() {
               />
             )}
           </div>
-
-          {/* Close-up thumbnails */}
-          {closeUps.length > 0 && (
-            <div style={{ display: "flex", gap: "0.6rem", marginTop: "1rem", flexWrap: "wrap" }}>
-              <div
-                className="artwork-closeup-thumb"
-                onClick={() => setActiveImg(images[0])}
-                style={{
-                  width: "80px", height: "80px", overflow: "hidden", cursor: "pointer", flexShrink: 0,
-                  border: "1.5px solid #e0e0e0",
-                  borderRadius: "4px", transition: "all 0.2s ease",
-                }}
-              >
-                <img src={images[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-              </div>
-
-              {closeUps.map((url, i) => (
-                <div
-                  className="artwork-closeup-thumb"
-                  key={i}
-                  onClick={() => setActiveImg(url)}
-                  style={{
-                    width: "80px", height: "80px", overflow: "hidden", cursor: "pointer", flexShrink: 0,
-                    border: "1.5px solid #e0e0e0",
-                    borderRadius: "4px", transition: "all 0.2s ease",
-                  }}
-                >
-                  <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
-        {/* Right: metadata */}
+        {/* Right: metadata + thumbnails */}
         <div style={{ paddingTop: "0.5rem" }}>
-          <h1 className="font-garamond" style={{ fontSize: "2.6rem", fontWeight: 500, lineHeight: 1.1, marginBottom: "2rem" }}>
+          <h1 className="font-garamond" style={{ fontSize: "2.2rem", fontWeight: 500, lineHeight: 1.1, marginBottom: "2rem" }}>
             {art.title}
           </h1>
 
           <div>
             {fields.map(([label, value], i) => (
               <div key={i}>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "0.9rem 0", alignItems: "baseline" }}>
-                  <span className="font-sora" style={{ fontSize: "0.85rem", letterSpacing: "0.12em", color: "#0047AB", textTransform: "uppercase" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "0.9rem 0", alignItems: "baseline", gap: "1rem" }}>
+                  <span className="font-sora" style={{ fontSize: "0.8rem", letterSpacing: "0.12em", color: "#0047AB", textTransform: "uppercase", flexShrink: 0 }}>
                     {label}
                   </span>
-                  <span className="font-garamond" style={{ fontSize: "1.25rem", color: "#111" }}>{value}</span>
+                  <span className="font-garamond" style={{ fontSize: "1.1rem", color: "#111", textAlign: "right" }}>{value}</span>
                 </div>
                 <hr className="cobalt-line" style={{ margin: 0 }} />
               </div>
@@ -206,9 +174,32 @@ export default function ArtworkDetail() {
           </div>
 
           {art.description && (
-            <p className="font-garamond" style={{ fontSize: "1.2rem", lineHeight: 1.85, color: "#222", marginTop: "2.5rem", fontStyle: "italic" }}>
+            <p className="font-garamond" style={{ fontSize: "1.1rem", lineHeight: 1.85, color: "#222", marginTop: "2rem", fontStyle: "italic" }}>
               {art.description}
             </p>
+          )}
+
+          {/* Thumbnails below details */}
+          {closeUps.length > 0 && (
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "2rem", flexWrap: "wrap" }}>
+              <div
+                className="artwork-closeup-thumb"
+                onClick={() => setActiveImg(images[0])}
+                style={{ width: "64px", height: "64px", overflow: "hidden", cursor: "pointer", flexShrink: 0, border: "1.5px solid #e0e0e0", borderRadius: "4px" }}
+              >
+                <img src={images[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              </div>
+              {closeUps.map((url, i) => (
+                <div
+                  className="artwork-closeup-thumb"
+                  key={i}
+                  onClick={() => setActiveImg(url)}
+                  style={{ width: "64px", height: "64px", overflow: "hidden", cursor: "pointer", flexShrink: 0, border: "1.5px solid #e0e0e0", borderRadius: "4px" }}
+                >
+                  <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>

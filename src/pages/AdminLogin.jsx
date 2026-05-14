@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../context/AuthContext";
 
 const inputStyle = {
   width: "100%", border: "none",
@@ -18,6 +19,7 @@ const labelStyle = {
 export default function AdminLogin() {
   const navigate                      = useNavigate();
   const [searchParams]                = useSearchParams();
+  const { session, isAdmin }          = useAuth();
   const [email,        setEmail]      = useState("");
   const [password,     setPassword]   = useState("");
   const [newPassword,  setNewPassword]= useState("");
@@ -26,10 +28,10 @@ export default function AdminLogin() {
   const [resetSent,    setResetSent]  = useState(false);
   const isRecovery = searchParams.get("recovery") === "true";
 
-  // If arriving from password-recovery magic link, show new-password form
+  // Already logged in as admin → go straight to dashboard
   useEffect(() => {
-    if (isRecovery) setError(null);
-  }, [isRecovery]);
+    if (session && isAdmin) navigate("/admin", { replace: true });
+  }, [session, isAdmin]);
 
   async function handleLogin() {
   if (!email || !password) return;
@@ -44,9 +46,8 @@ export default function AdminLogin() {
     return;
   }
 
-  // Session exists — let App.jsx decide where to send based on isAdmin
   if (data.session) {
-    navigate("/", { replace: true });
+    navigate("/admin", { replace: true });
   }
 }
 

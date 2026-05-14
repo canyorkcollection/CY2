@@ -62,9 +62,6 @@ export default function Header() {
         {NAV_LINKS.map(l => (
           <button key={l.path} style={navBtn} onClick={() => go(l.path)}>{l.label}</button>
         ))}
-        <button className="btn-cobalt font-sora" onClick={signOut} style={{ letterSpacing: "0.12em" }}>
-          Sign out
-        </button>
       </nav>
 
       {/* Hamburger button — visible only on mobile via CSS */}
@@ -121,13 +118,6 @@ export default function Header() {
               {l.label}
             </button>
           ))}
-          <button
-            className="btn-cobalt font-sora"
-            onClick={() => { signOut(); setOpen(false); }}
-            style={{ marginTop: "1.2rem", width: "100%", letterSpacing: "0.12em" }}
-          >
-            Sign out
-          </button>
         </nav>
       )}
     </header>

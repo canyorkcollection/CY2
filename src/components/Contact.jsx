@@ -94,7 +94,7 @@ export default function Contact() {
             <>
               <div>
                 <label className="font-sora" style={{ fontSize: "0.8rem", letterSpacing: "0.12em", color: "#0047AB", textTransform: "uppercase" }}>
-                  Nombre
+                  Name
                 </label>
                 <input
                   type="text"
@@ -122,7 +122,7 @@ export default function Contact() {
 
               <div>
                 <label className="font-sora" style={{ fontSize: "0.8rem", letterSpacing: "0.12em", color: "#0047AB", textTransform: "uppercase" }}>
-                  Mensaje
+                  Message
                 </label>
                 <textarea
                   name="message"
@@ -140,7 +140,7 @@ export default function Contact() {
                 disabled={loading}
                 style={{ opacity: loading ? 0.6 : 1, transition: "opacity 0.2s" }}
               >
-                {loading ? "Sending…" : "Enviar mensaje"}
+                {loading ? "Sending…" : "Send message"}
               </button>
 
               {error && (

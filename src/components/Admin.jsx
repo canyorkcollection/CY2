@@ -3,11 +3,13 @@ import PageTransition    from "./PageTransition";
 import AdminArtworks     from "./AdminArtworks";
 import AdminArtists      from "./AdminArtists";
 import AdminInvitations  from "./AdminInvitations";
+import AdminContact      from "./AdminContact";
 
 const TABS = [
-  { key: "artworks",    label: "Obras"        },
-  { key: "artists",     label: "Artistas"     },
-  { key: "invitations", label: "Invitaciones" },
+  { key: "artworks",    label: "Works"       },
+  { key: "artists",     label: "Artists"     },
+  { key: "contact",     label: "Contact"     },
+  { key: "invitations", label: "Invitations" },
 ];
 
 export default function Admin() {
@@ -49,6 +51,7 @@ export default function Admin() {
         <div>
           {active === "artworks"    && <AdminArtworks />}
           {active === "artists"     && <AdminArtists  />}
+          {active === "contact"     && <AdminContact  />}
           {active === "invitations" && <AdminInvitations />}
         </div>
       </div>

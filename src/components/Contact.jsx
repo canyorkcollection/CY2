@@ -15,7 +15,7 @@ export default function Contact() {
 
   async function handleSubmit() {
     if (!fields.name || !fields.email || !fields.message) {
-      setError("Por favor, completa todos los campos.");
+      setError("Please complete all fields.");
       return;
     }
     setLoading(true);
@@ -32,10 +32,10 @@ export default function Contact() {
         setSent(true);
       } else {
         const data = await res.json();
-        setError(data?.errors?.[0]?.message ?? "Error al enviar. Inténtalo de nuevo.");
+        setError(data?.errors?.[0]?.message ?? "Error sending. Please try again.");
       }
     } catch {
-      setError("Error de conexión. Inténtalo de nuevo.");
+      setError("Connection error. Please try again.");
     }
 
     setLoading(false);
@@ -68,22 +68,22 @@ export default function Contact() {
         {/* COLUMNA IZQUIERDA */}
         <div>
           <h1 className="font-sora" style={{ fontSize: "2.8rem", fontWeight: 700, lineHeight: 1.1, marginBottom: "2rem" }}>
-            Hablemos sobre la colección.
+            Let's talk about the collection.
           </h1>
 
           <hr className="cobalt-line" />
 
           <p className="font-garamond" style={{ fontSize: "1.4rem", color: "#0047AB", margin: "1.8rem 0 0.4rem", letterSpacing: "0.04em" }}>
-            Ibiza, España
+            Ibiza, Spain
           </p>
           <p className="font-garamond" style={{ fontSize: "1.15rem", color: "#777", lineHeight: 1.7, marginBottom: "2.5rem" }}>
-            Can York es una colección privada. Las obras no se exhiben públicamente. El acceso es por invitación, y cada conversación es tratada con la misma discreción que la propia colección.
+            Can York is a private collection. Works are not publicly exhibited. Access is by invitation, and every conversation is treated with the same discretion as the collection itself.
           </p>
 
           <hr className="cobalt-line" />
 
           <p className="font-garamond" style={{ fontSize: "1.1rem", color: "#aaa", lineHeight: 1.8, marginTop: "1.5rem", fontStyle: "italic" }}>
-            "La privacidad no es secreto.<br />Es la condición necesaria para que el arte respire."
+            "Privacy is not secrecy.<br />It is the necessary condition for art to breathe."
           </p>
         </div>
 
@@ -101,7 +101,7 @@ export default function Contact() {
                   name="name"
                   value={fields.name}
                   onChange={handleChange}
-                  placeholder="Tu nombre"
+                  placeholder="Your name"
                   style={inputStyle}
                 />
               </div>
@@ -115,7 +115,7 @@ export default function Contact() {
                   name="email"
                   value={fields.email}
                   onChange={handleChange}
-                  placeholder="tu@email.com"
+                  placeholder="your@email.com"
                   style={inputStyle}
                 />
               </div>
@@ -128,7 +128,7 @@ export default function Contact() {
                   name="message"
                   value={fields.message}
                   onChange={handleChange}
-                  placeholder="¿En qué podemos ayudarte?"
+                  placeholder="How can we help you?"
                   rows={5}
                   style={inputStyle}
                 />
@@ -140,7 +140,7 @@ export default function Contact() {
                 disabled={loading}
                 style={{ opacity: loading ? 0.6 : 1, transition: "opacity 0.2s" }}
               >
-                {loading ? "Enviando…" : "Enviar mensaje"}
+                {loading ? "Sending…" : "Enviar mensaje"}
               </button>
 
               {error && (
@@ -152,10 +152,10 @@ export default function Contact() {
           ) : (
             <div style={{ paddingTop: "1rem" }}>
               <p className="font-garamond" style={{ fontSize: "1.4rem", color: "#0047AB", lineHeight: 1.7 }}>
-                Mensaje enviado.
+                Message sent.
               </p>
               <p className="font-garamond" style={{ fontSize: "1.2rem", color: "#555", marginTop: "0.8rem", lineHeight: 1.7, fontStyle: "italic" }}>
-                Te responderemos con la misma discreción con la que cuidas tu colección.
+                We will reply with the same discretion with which you care for your collection.
               </p>
             </div>
           )}

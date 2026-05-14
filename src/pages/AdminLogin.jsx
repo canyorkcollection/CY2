@@ -40,7 +40,7 @@ export default function AdminLogin() {
   setLoading(false);
 
   if (error) {
-    setError("Credenciales incorrectas.");
+    setError("Incorrect credentials.");
     return;
   }
 
@@ -51,7 +51,7 @@ export default function AdminLogin() {
 }
 
   async function handleReset() {
-    if (!email) { setError("Introduce tu email primero."); return; }
+    if (!email) { setError("Enter your email first."); return; }
     setLoading(true);
     setError(null);
 
@@ -60,7 +60,7 @@ export default function AdminLogin() {
     });
     setLoading(false);
 
-    if (error) setError("Error al enviar el correo de recuperación.");
+    if (error) setError("Error sending recovery email.");
     else setResetSent(true);
   }
 
@@ -72,7 +72,7 @@ export default function AdminLogin() {
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     setLoading(false);
 
-    if (error) setError("Error al actualizar la contraseña.");
+    if (error) setError("Error updating password.");
     else navigate("/admin", { replace: true });
   }
 
@@ -84,7 +84,7 @@ export default function AdminLogin() {
         CAN YORK
       </span>
       <p className="font-garamond" style={{ fontSize: "1.1rem", color: "#aaa", marginBottom: "3.5rem", fontStyle: "italic" }}>
-        {isRecovery ? "Nueva contraseña" : "Acceso administración"}
+        {isRecovery ? "New password" : "Admin access"}
       </p>
 
       <div style={{ width: "100%", maxWidth: "360px" }}>
@@ -92,7 +92,7 @@ export default function AdminLogin() {
         {isRecovery ? (
           /* ── Password recovery form ── */
           <>
-            <label style={labelStyle}>Nueva contraseña</label>
+            <label style={labelStyle}>New password</label>
             <input
               type="password"
               value={newPassword}
@@ -106,7 +106,7 @@ export default function AdminLogin() {
               disabled={loading}
               style={{ width: "100%", opacity: loading ? 0.6 : 1 }}
             >
-              {loading ? "Guardando…" : "Guardar contraseña"}
+              {loading ? "Saving…" : "Save password"}
             </button>
           </>
         ) : (
@@ -121,7 +121,7 @@ export default function AdminLogin() {
               style={{ ...inputStyle, marginBottom: "2rem" }}
             />
 
-            <label style={labelStyle}>Contraseña</label>
+            <label style={labelStyle}>Password</label>
             <input
               type="password"
               value={password}
@@ -136,12 +136,12 @@ export default function AdminLogin() {
               disabled={loading}
               style={{ width: "100%", opacity: loading ? 0.6 : 1, marginBottom: "1.5rem" }}
             >
-              {loading ? "Accediendo…" : "Acceder"}
+              {loading ? "Signing in…" : "Acceder"}
             </button>
 
             {resetSent ? (
               <p className="font-sora" style={{ fontSize: "0.8rem", color: "#0047AB", textAlign: "center", letterSpacing: "0.06em" }}>
-                Correo de recuperación enviado.
+                Recovery email sent.
               </p>
             ) : (
               <button
@@ -157,7 +157,7 @@ export default function AdminLogin() {
                 onMouseEnter={e => e.target.style.color = "#0047AB"}
                 onMouseLeave={e => e.target.style.color = "#bbb"}
               >
-                ¿Olvidaste tu contraseña?
+                Forgot your password?
               </button>
             )}
           </>

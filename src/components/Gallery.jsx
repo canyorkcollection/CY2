@@ -39,7 +39,7 @@ export default function Gallery() {
   if (loading) {
     return (
       <PageTransition>
-        <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#777" }}>Cargando colección…</p>
+        <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#777" }}>Loading collection…</p>
       </PageTransition>
     );
   }
@@ -56,10 +56,10 @@ export default function Gallery() {
     <PageTransition>
       <div style={{ marginBottom: "3.5rem" }}>
         <h1 className="font-sora" style={{ fontSize: "2.4rem", fontWeight: 700, lineHeight: 1.15, marginBottom: "1.2rem" }}>
-          Obras en colección
+          Works in the collection
         </h1>
         <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#333", maxWidth: "520px", lineHeight: 1.7 }}>
-          Una selección privada de arte contemporáneo reunida durante dos décadas en los márgenes de lo visible.
+          A private selection of contemporary art assembled over two decades at the margins of the visible.
         </p>
       </div>
 
@@ -105,7 +105,7 @@ export default function Gallery() {
 
       <hr className="cobalt-line" style={{ marginTop: "3.5rem" }} />
       <p className="font-garamond" style={{ fontSize: "1.1rem", color: "#777", marginTop: "1.2rem" }}>
-        Haz clic sobre cualquier obra para ver su ficha completa.
+        Click on any work to view its full details.
       </p>
     </PageTransition>
   );

@@ -21,7 +21,7 @@ export default function Artists() {
 
   if (loading) return (
     <PageTransition>
-      <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#777" }}>Cargando artistas…</p>
+      <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#777" }}>Loading artists…</p>
     </PageTransition>
   );
 
@@ -35,10 +35,10 @@ export default function Artists() {
     <PageTransition>
       <div style={{ marginBottom: "3.5rem" }}>
         <h1 className="font-sora" style={{ fontSize: "2.4rem", fontWeight: 700, lineHeight: 1.15, marginBottom: "1.2rem" }}>
-          Artistas
+          Artists
         </h1>
         <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#333", maxWidth: "520px", lineHeight: 1.7 }}>
-          Las voces que dan forma a la colección.
+          The voices that shape the collection.
         </p>
       </div>
 

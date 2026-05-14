@@ -3,6 +3,20 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import PageTransition from "./PageTransition";
 
+function aspectRatio(dim) {
+  if (!dim || !dim.trim()) return null;
+  const str = dim.replace(/(\d+)\s+(\d+)\/(\d+)/g, (_, w, n, d) =>
+    String(parseFloat(w) + parseFloat(n) / parseFloat(d))
+  );
+  const nums = str.match(/[\d.]+/g)?.map(Number);
+  if (!nums || nums.length < 2 || nums[0] === 0 || nums[1] === 0) return null;
+  return nums[0] / nums[1];
+}
+
+const THUMB_H = 240;
+const MIN_W   = 80;
+const MAX_W   = 300;
+
 export default function ArtistDetail() {
   const { id }   = useParams();
   const navigate = useNavigate();
@@ -28,7 +42,7 @@ export default function ArtistDetail() {
     fetchData();
   }, [id]);
 
-  if (loading) return <PageTransition><p className="font-garamond" style={{ fontSize: "1.3rem", color: "#777" }}>Cargando artista…</p></PageTransition>;
+  if (loading) return <PageTransition><p className="font-garamond" style={{ fontSize: "1.3rem", color: "#777" }}>Loading artist…</p></PageTransition>;
   if (error || !artist) return (
     <PageTransition>
       <button className="btn-back font-sora" onClick={() => navigate("/artists")}>← Volver a artistas</button>
@@ -71,21 +85,25 @@ export default function ArtistDetail() {
       {artworks.length === 0 ? (
         <p className="font-sora" style={{ fontSize: "1rem", color: "#999" }}>Sin obras disponibles en este momento.</p>
       ) : (
-        <div className="artist-works-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2.5rem" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "2.5rem", alignItems: "flex-end" }}>
           {artworks.map(art => {
             const imgSrc = art.images?.[0] ?? art.image_url;
+            const ratio  = aspectRatio(art.dimensions);
+            const w      = ratio
+              ? Math.round(Math.min(MAX_W, Math.max(MIN_W, THUMB_H * ratio)))
+              : Math.round(THUMB_H * 0.85);
             return (
-              <Link key={art.id} to={`/artwork/${art.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+              <Link key={art.id} to={`/artwork/${art.id}`} style={{ textDecoration: "none", color: "inherit", flexShrink: 0 }}>
                 <div
                   style={{ transition: "opacity 0.2s ease" }}
                   onMouseEnter={e => e.currentTarget.style.opacity = "0.8"}
                   onMouseLeave={e => e.currentTarget.style.opacity = "1"}
                 >
-                  <div style={{ width: "100%", height: "280px", background: "#f5f5f5", overflow: "hidden", border: "1.5px solid #e0e0e0" }}>
-                    {imgSrc && <img src={imgSrc} alt={art.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />}
+                  <div style={{ width: `${w}px`, height: `${THUMB_H}px`, overflow: "hidden" }}>
+                    {imgSrc && <img src={imgSrc} alt={art.title} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />}
                   </div>
-                  <p className="font-garamond" style={{ fontSize: "1.15rem", marginTop: "0.8rem", color: "#111", lineHeight: 1.3 }}>{art.title}</p>
-                  <p className="font-sora" style={{ fontSize: "0.82rem", color: "#999", marginTop: "0.25rem", letterSpacing: "0.06em" }}>{art.year}</p>
+                  <p className="font-garamond" style={{ fontSize: "1rem", marginTop: "0.6rem", color: "#111", lineHeight: 1.3 }}>{art.title}</p>
+                  <p className="font-sora" style={{ fontSize: "0.78rem", color: "#999", marginTop: "0.2rem", letterSpacing: "0.06em" }}>{art.year}</p>
                 </div>
               </Link>
             );

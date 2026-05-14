@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const NAV_LINKS = [
-  { label: "Colección", path: "/" },
-  { label: "Artistas",  path: "/artists" },
-  { label: "Contacto",  path: "/contact" },
+  { label: "Collection", path: "/" },
+  { label: "Artists",    path: "/artists" },
+  { label: "Contact",    path: "/contact" },
 ];
 
 export default function Header() {
@@ -53,7 +53,7 @@ export default function Header() {
           <button key={l.path} style={navBtn} onClick={() => go(l.path)}>{l.label}</button>
         ))}
         <button className="btn-cobalt font-sora" onClick={signOut} style={{ letterSpacing: "0.12em" }}>
-          Salir
+          Sign out
         </button>
       </nav>
 
@@ -116,7 +116,7 @@ export default function Header() {
             onClick={() => { signOut(); setOpen(false); }}
             style={{ marginTop: "1.2rem", width: "100%", letterSpacing: "0.12em" }}
           >
-            Salir
+            Sign out
           </button>
         </nav>
       )}

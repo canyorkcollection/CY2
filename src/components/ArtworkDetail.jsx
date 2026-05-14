@@ -104,31 +104,31 @@ export default function ArtworkDetail() {
 
   if (loading) return (
     <PageTransition>
-      <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#777" }}>Cargando obra…</p>
+      <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#777" }}>Loading work…</p>
     </PageTransition>
   );
 
   if (error || !art) return (
     <PageTransition>
-      <button className="btn-back font-sora" onClick={() => navigate("/")}>← Volver al listado</button>
-      <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#B22222" }}>{error ?? "Obra no encontrada."}</p>
+      <button className="btn-back font-sora" onClick={() => navigate("/")}>← Back to collection</button>
+      <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#B22222" }}>{error ?? "Work not found."}</p>
     </PageTransition>
   );
 
   const images   = art.images ?? (art.image_url ? [art.image_url] : []);
   const closeUps = images.slice(1);
   const fields   = [
-    ["Año",     art.year],
-    ["Técnica", art.technique],
-    ["Medidas", art.dimensions],
-    ["Artista", art.artists?.name],
+    ["Year",     art.year],
+    ["Technique", art.technique],
+    ["Dimensions", art.dimensions],
+    ["Artist", art.artists?.name],
   ];
 
   return (
     <PageTransition>
       {zoomSrc && <ZoomOverlay src={zoomSrc} onClose={() => setZoomSrc(null)} />}
 
-      <button className="btn-back font-sora" onClick={() => navigate("/")}>← Volver al listado</button>
+      <button className="btn-back font-sora" onClick={() => navigate("/")}>← Back to collection</button>
 
       <div className="artwork-detail-grid" style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "4rem", alignItems: "start" }}>
 
@@ -166,7 +166,7 @@ export default function ArtworkDetail() {
                   <span className="font-sora" style={{ fontSize: "0.8rem", letterSpacing: "0.12em", color: "#0047AB", textTransform: "uppercase", flexShrink: 0 }}>
                     {label}
                   </span>
-                  {label === "Artista" && art.artist_id
+                  {label === "Artist" && art.artist_id
                     ? <Link to={`/artists/${art.artist_id}`} className="font-garamond artist-name-link" style={{ fontSize: "1.1rem", textAlign: "right" }}>{value}</Link>
                     : <span className="font-garamond" style={{ fontSize: "1.1rem", color: "#111", textAlign: "right" }}>{value}</span>
                   }
@@ -212,7 +212,7 @@ export default function ArtworkDetail() {
         <div style={{ marginTop: "5rem" }}>
           <hr className="cobalt-line" />
           <h2 className="font-garamond" style={{ fontSize: "1.6rem", fontWeight: 500, margin: "2rem 0 2rem" }}>
-            Otras obras del artista
+            Other works by the artist
           </h2>
           <div className="artwork-related-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "2rem" }}>
             {related.map(rel => {

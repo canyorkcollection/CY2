@@ -32,9 +32,9 @@ export default function GuestLogin() {
 
     if (error) {
       if (error.status === 422 || error.message?.toLowerCase().includes("signups not allowed")) {
-        setError("No tienes acceso. Debes recibir una invitación.");
+        setError("You do not have access. You must receive an invitation.");
       } else {
-        setError("Error al enviar. Inténtalo de nuevo.");
+        setError("Error sending. Please try again.");
       }
     } else {
       setSent(true);
@@ -50,10 +50,10 @@ export default function GuestLogin() {
           CAN YORK
         </span>
         <p className="font-garamond" style={{ fontSize: "1.4rem", color: "#0047AB", textAlign: "center", lineHeight: 1.7 }}>
-          Revisa tu correo.
+          Check your email.
         </p>
         <p className="font-garamond" style={{ fontSize: "1.1rem", color: "#777", marginTop: "0.6rem", fontStyle: "italic", textAlign: "center" }}>
-          Hemos enviado un enlace de acceso a {email}
+          We sent an access link to {email}
         </p>
         <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, borderTop: "1.5px solid #0047AB" }} />
       </div>
@@ -66,7 +66,7 @@ export default function GuestLogin() {
         CAN YORK
       </span>
       <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#444", marginBottom: "3.5rem", fontStyle: "italic" }}>
-        Acceso exclusivo a la colección
+        Exclusive access to the collection
       </p>
 
       <div style={{ width: "100%", maxWidth: "380px" }}>
@@ -78,7 +78,7 @@ export default function GuestLogin() {
           value={email}
           onChange={e => setEmail(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="tu@email.com"
+          placeholder="your@email.com"
           style={inputStyle}
         />
 
@@ -88,7 +88,7 @@ export default function GuestLogin() {
           disabled={loading}
           style={{ width: "100%", marginTop: "2rem", opacity: loading ? 0.6 : 1, transition: "opacity 0.2s" }}
         >
-          {loading ? "Enviando…" : "Solicitar acceso"}
+          {loading ? "Sending…" : "Request access"}
         </button>
 
         {error && (

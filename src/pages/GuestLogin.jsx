@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "../lib/supabaseClient";
 
 const inputStyle = {
   width: "100%", border: "none",
@@ -22,24 +21,28 @@ export default function GuestLogin() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const res = await fetch(`${supabaseUrl}/functions/v1/send-magic-link`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "apikey": supabaseKey },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json().catch(() => ({}));
 
-    setLoading(false);
+      setLoading(false);
 
-    if (error) {
-      const msg = error.message?.toLowerCase() ?? "";
-      if (msg.includes("signups not allowed") || msg.includes("user not found")) {
+      if (res.ok) {
+        setSent(true);
+      } else if (data.error === "not_invited") {
         setError("This email has not been invited. Contact us to request access.");
       } else {
         setError("Couldn't send the link. Please try again.");
       }
-    } else {
-      setSent(true);
+    } catch {
+      setLoading(false);
+      setError("Connection error. Please try again.");
     }
   }
 

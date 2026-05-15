@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
 
 const inputStyle = {
   width: "100%", border: "none",
@@ -21,28 +22,22 @@ export default function GuestLogin() {
     setLoading(true);
     setError(null);
 
-    try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-      const res = await fetch(`${supabaseUrl}/functions/v1/send-magic-link`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "apikey": supabaseKey },
-        body: JSON.stringify({ email }),
-      });
-      const data = await res.json().catch(() => ({}));
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    });
 
-      setLoading(false);
+    setLoading(false);
 
-      if (res.ok) {
-        setSent(true);
-      } else if (data.error === "not_invited") {
+    if (error) {
+      const msg = error.message?.toLowerCase() ?? "";
+      if (msg.includes("signups not allowed") || msg.includes("user not found")) {
         setError("This email has not been invited. Contact us to request access.");
       } else {
         setError("Couldn't send the link. Please try again.");
       }
-    } catch {
-      setLoading(false);
-      setError("Connection error. Please try again.");
+    } else {
+      setSent(true);
     }
   }
 
@@ -73,7 +68,6 @@ export default function GuestLogin() {
 
       <div style={{ width: "100%", maxWidth: "380px" }}>
 
-        {/* Already invited */}
         <p className="font-garamond" style={{ fontSize: "1.2rem", color: "#444", marginBottom: "1.6rem", lineHeight: 1.6 }}>
           Already invited? Enter your email to sign in.
         </p>
@@ -105,14 +99,12 @@ export default function GuestLogin() {
           </p>
         )}
 
-        {/* Divider */}
         <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "2.5rem 0" }}>
           <div style={{ flex: 1, height: "1px", background: "#e8e8e8" }} />
           <span className="font-sora" style={{ fontSize: "0.7rem", color: "#bbb", letterSpacing: "0.12em", textTransform: "uppercase" }}>or</span>
           <div style={{ flex: 1, height: "1px", background: "#e8e8e8" }} />
         </div>
 
-        {/* Not yet invited */}
         <p className="font-garamond" style={{ fontSize: "1.1rem", color: "#777", textAlign: "center", lineHeight: 1.7 }}>
           Don't have access yet?{" "}
           <Link to="/contact" style={{ color: "#0047AB", textDecoration: "none" }}>

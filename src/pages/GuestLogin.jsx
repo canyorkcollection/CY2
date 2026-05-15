@@ -32,10 +32,11 @@ export default function GuestLogin() {
     setLoading(false);
 
     if (error) {
-      if (error.status === 422 || error.message?.toLowerCase().includes("signups not allowed")) {
+      const msg = error.message?.toLowerCase() ?? "";
+      if (msg.includes("signups not allowed") || msg.includes("user not found")) {
         setError("This email has not been invited. Contact us to request access.");
       } else {
-        setError("Error sending. Please try again.");
+        setError("Couldn't send the link. Please try again.");
       }
     } else {
       setSent(true);

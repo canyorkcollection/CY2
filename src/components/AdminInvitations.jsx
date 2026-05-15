@@ -41,11 +41,12 @@ export default function AdminInvitations() {
   }
 
   async function fetchRequests() {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("access_requests")
       .select("*")
       .eq("status", "pending")
       .order("requested_at", { ascending: false });
+    if (error) console.error("access_requests fetch error:", error);
     if (data) setRequests(data);
   }
 
@@ -120,8 +121,7 @@ export default function AdminInvitations() {
     <div>
 
       {/* Access requests */}
-      {(requests.length > 0 || loadingList) && (
-        <>
+      <>
           <h2 className="font-sora" style={{ fontSize: "1.4rem", fontWeight: 600, marginBottom: "0.5rem" }}>
             Access requests
           </h2>
@@ -164,7 +164,6 @@ export default function AdminInvitations() {
 
           <hr className="cobalt-line" style={{ marginBottom: "3rem" }} />
         </>
-      )}
 
       {/* Invite manually */}
       <h2 className="font-sora" style={{ fontSize: "1.4rem", fontWeight: 600, marginBottom: "0.5rem" }}>

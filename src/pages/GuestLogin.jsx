@@ -32,7 +32,7 @@ export default function GuestLogin() {
 
     const msg = error.message?.toLowerCase() ?? "";
     if (msg.includes("signups not allowed") || msg.includes("user not found") || error.status === 422) {
-      await supabase.from("access_requests").upsert({ email, status: "pending" }, { onConflict: "email", ignoreDuplicates: true });
+      await supabase.from("access_requests").insert({ email, status: "pending" }).throwOnError().catch(() => {});
       setState("requested");
     } else {
       setState("requested"); // fallback — save anyway, don't show technical errors

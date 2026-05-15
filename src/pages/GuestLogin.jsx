@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 
 const inputStyle = {
@@ -32,7 +33,7 @@ export default function GuestLogin() {
 
     if (error) {
       if (error.status === 422 || error.message?.toLowerCase().includes("signups not allowed")) {
-        setError("You do not have access. You must receive an invitation.");
+        setError("This email has not been invited. Contact us to request access.");
       } else {
         setError("Error sending. Please try again.");
       }
@@ -62,14 +63,17 @@ export default function GuestLogin() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "2rem" }}>
-      <span className="font-sora" style={{ fontSize: "2.8rem", fontWeight: 700, letterSpacing: "0.18em", color: "#0047AB", marginBottom: "1.2rem" }}>
+      <span className="font-sora" style={{ fontSize: "2.8rem", fontWeight: 700, letterSpacing: "0.18em", color: "#0047AB", marginBottom: "3.5rem" }}>
         CAN YORK
       </span>
-      <p className="font-garamond" style={{ fontSize: "1.3rem", color: "#444", marginBottom: "3.5rem", fontStyle: "italic" }}>
-        Exclusive access to the collection
-      </p>
 
       <div style={{ width: "100%", maxWidth: "380px" }}>
+
+        {/* Already invited */}
+        <p className="font-garamond" style={{ fontSize: "1.2rem", color: "#444", marginBottom: "1.6rem", lineHeight: 1.6 }}>
+          Already invited? Enter your email to sign in.
+        </p>
+
         <label className="font-sora" style={{ fontSize: "0.75rem", letterSpacing: "0.12em", color: "#0047AB", textTransform: "uppercase", display: "block", marginBottom: "0.3rem" }}>
           Email
         </label>
@@ -88,7 +92,7 @@ export default function GuestLogin() {
           disabled={loading}
           style={{ width: "100%", marginTop: "2rem", opacity: loading ? 0.6 : 1, transition: "opacity 0.2s" }}
         >
-          {loading ? "Sending…" : "Request access"}
+          {loading ? "Sending…" : "Send sign-in link"}
         </button>
 
         {error && (
@@ -96,6 +100,23 @@ export default function GuestLogin() {
             {error}
           </p>
         )}
+
+        {/* Divider */}
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "2.5rem 0" }}>
+          <div style={{ flex: 1, height: "1px", background: "#e8e8e8" }} />
+          <span className="font-sora" style={{ fontSize: "0.7rem", color: "#bbb", letterSpacing: "0.12em", textTransform: "uppercase" }}>or</span>
+          <div style={{ flex: 1, height: "1px", background: "#e8e8e8" }} />
+        </div>
+
+        {/* Not yet invited */}
+        <p className="font-garamond" style={{ fontSize: "1.1rem", color: "#777", textAlign: "center", lineHeight: 1.7 }}>
+          Don't have access yet?{" "}
+          <Link to="/contact" style={{ color: "#0047AB", textDecoration: "none" }}>
+            Contact us
+          </Link>{" "}
+          to request an invitation.
+        </p>
+
       </div>
 
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, borderTop: "1.5px solid #0047AB" }} />

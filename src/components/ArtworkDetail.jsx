@@ -8,6 +8,7 @@ import PageTransition from "./PageTransition";
 function ZoomOverlay({ src, onClose }) {
   return (
     <div
+      data-zoom-overlay="true"
       onClick={onClose}
       style={{
         position: "fixed", inset: 0, zIndex: 2000,
@@ -147,6 +148,7 @@ export default function ArtworkDetail() {
               <img
                 src={activeImg}
                 alt={art.title}
+                crossOrigin="anonymous"
                 style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", display: "block", transition: "all 0.2s ease" }}
               />
             )}

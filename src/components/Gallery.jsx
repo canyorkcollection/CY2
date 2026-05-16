@@ -134,6 +134,7 @@ export default function Gallery() {
                   <img
                     src={imgSrc}
                     alt={art.title}
+                    crossOrigin="anonymous"
                     style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
                   />
                 )}

@@ -22,7 +22,8 @@ serve(async (req) => {
     if (req.method === 'GET') {
       const { data, error } = await supabaseAdmin.auth.admin.listUsers({ perPage: 1000 })
       if (error) throw error
-      const pendingInvites = data.users.filter(u => u.invited_at && !u.last_sign_in_at)
+      const ADMIN_EMAIL = "canyorkcollection@gmail.com"
+      const pendingInvites = data.users.filter(u => u.email?.toLowerCase() !== ADMIN_EMAIL)
       return new Response(JSON.stringify(pendingInvites), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
     }
 

@@ -203,7 +203,7 @@ export default function AdminInvitations() {
 
       {/* Invited users list */}
       <h3 className="font-sora" style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "1.5rem" }}>
-        Invited users
+        Users
       </h3>
 
       {loadingList ? (
@@ -219,7 +219,9 @@ export default function AdminInvitations() {
                 <p className="font-sora" style={meta}>
                   {inv.last_sign_in_at
                     ? `Active · Last sign in: ${new Date(inv.last_sign_in_at).toLocaleDateString()}`
-                    : `Pending · Invited: ${new Date(inv.invited_at).toLocaleDateString()}`}
+                    : inv.invited_at
+                      ? `Pending · Invited: ${new Date(inv.invited_at).toLocaleDateString()}`
+                      : `Added: ${new Date(inv.created_at).toLocaleDateString()}`}
                 </p>
               </div>
               <button

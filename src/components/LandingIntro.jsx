@@ -64,11 +64,11 @@ export default function LandingIntro({ onComplete }) {
       >
         {/* Logo */}
         <motion.h1
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: phase >= 2 ? 0 : 1 }} // Desaparece en la fase 2
-          transition={phase >= 2 
-            ? { duration: 0.5, ease: "easeOut" } 
-            : { duration: 1.2, delay: 0, ease: "easeOut" }
+          initial={{ y: -80, opacity: 0 }}
+          animate={{ y: 0, opacity: phase >= 2 ? 0 : 1 }}
+          transition={phase >= 2
+            ? { duration: 0.5, ease: "easeOut" }
+            : { y: { type: "spring", stiffness: 200, damping: 18 }, opacity: { duration: 0.6 } }
           }
           style={{
             fontFamily: "'Sora', sans-serif",
@@ -85,9 +85,9 @@ export default function LandingIntro({ onComplete }) {
         <motion.p
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: phase >= 2 ? 0 : 1, y: phase >= 2 ? 15 : 0 }}
-          transition={phase >= 2 
-            ? { duration: 0.5, ease: "easeOut" } 
-            : { duration: 1, delay: 2, ease: "easeOut" }
+          transition={phase >= 2
+            ? { duration: 0.4, ease: "easeOut" }
+            : { y: { type: "spring", stiffness: 180, damping: 20, delay: 0.4 }, opacity: { duration: 0.7, delay: 0.4 } }
           }
           onAnimationComplete={() => {
             if (phase === 1) handleSubtitleComplete();

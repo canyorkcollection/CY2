@@ -1,5 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+
+const ADMIN_EMAIL = "canyorkcollection@gmail.com";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const inputStyle = {
   width: "100%", border: "none",
@@ -11,50 +16,56 @@ const inputStyle = {
 };
 
 export default function GuestLogin() {
+  const navigate  = useNavigate();
   const [email,   setEmail]   = useState("");
   const [loading, setLoading] = useState(false);
-  const [state,   setState]   = useState("idle"); // idle | sent | requested
+  const [state,   setState]   = useState("idle"); // idle | requested | error
 
   async function handleSubmit() {
     if (!email) return;
+
+    if (email.toLowerCase() === ADMIN_EMAIL) {
+      navigate("/admin/login");
+      return;
+    }
+
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-magic-link`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({ email }),
     });
 
-    if (!error) {
-      setState("sent");
+    const data = await res.json().catch(() => ({}));
+
+    if (res.ok && data.token_hash) {
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        token_hash: data.token_hash,
+        type: "magiclink",
+      });
+
+      if (!verifyError) {
+        // Session established — AuthProvider will re-render the app automatically
+        return;
+      }
+
+      setState("error");
       setLoading(false);
       return;
     }
 
-    const msg = error.message?.toLowerCase() ?? "";
-    if (msg.includes("signups not allowed") || msg.includes("user not found") || error.status === 422) {
-      await supabase.from("access_requests").insert({ email, status: "pending" });
-      setState("requested");
-    } else {
-      setState("requested"); // fallback — save anyway, don't show technical errors
-    }
-
+    // not_invited or any other error → create access request
+    await supabase.from("access_requests").insert({ email, status: "pending" });
+    setState("requested");
     setLoading(false);
   }
 
   function handleKeyDown(e) { if (e.key === "Enter") handleSubmit(); }
-
-  if (state === "sent") {
-    return (
-      <Screen>
-        <p className="font-garamond" style={{ fontSize: "1.4rem", color: "#0047AB", textAlign: "center", lineHeight: 1.7 }}>
-          Check your email.
-        </p>
-        <p className="font-garamond" style={{ fontSize: "1.1rem", color: "#777", marginTop: "0.6rem", fontStyle: "italic", textAlign: "center" }}>
-          We sent a sign-in link to {email}
-        </p>
-      </Screen>
-    );
-  }
 
   if (state === "requested") {
     return (
@@ -65,6 +76,23 @@ export default function GuestLogin() {
         <p className="font-garamond" style={{ fontSize: "1.1rem", color: "#777", marginTop: "0.6rem", fontStyle: "italic", textAlign: "center", maxWidth: "320px" }}>
           We'll review your request and be in touch shortly.
         </p>
+      </Screen>
+    );
+  }
+
+  if (state === "error") {
+    return (
+      <Screen>
+        <p className="font-garamond" style={{ fontSize: "1.1rem", color: "#777", textAlign: "center", maxWidth: "320px" }}>
+          Something went wrong. Please try again.
+        </p>
+        <button
+          className="btn-cobalt font-sora"
+          onClick={() => { setState("idle"); setEmail(""); }}
+          style={{ marginTop: "1.5rem" }}
+        >
+          Try again
+        </button>
       </Screen>
     );
   }

@@ -14,6 +14,7 @@ import LandingIntro  from "./components/LandingIntro";
 import GuestLogin    from "./pages/GuestLogin";
 import AdminLogin    from "./pages/AdminLogin";
 import AuthCallback  from "./pages/AuthCallback";
+import CustomCursor  from "./components/CustomCursor";
 import "./styles.css";
 
 function AnimatedRoutes() {
@@ -100,6 +101,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <CustomCursor />
         <AnimatedRoutes />
       </BrowserRouter>
     </AuthProvider>

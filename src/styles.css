@@ -2,6 +2,11 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #fff; }
+
+body.custom-cursor-active,
+body.custom-cursor-active * {
+  cursor: none !important;
+}
 .font-sora { font-family: 'Sora', sans-serif; }
 .font-garamond { font-family: 'EB Garamond', serif; }
 
